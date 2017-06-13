@@ -1,9 +1,9 @@
 <library path="libvision_msgs_visualization">
-  <class name="vision_msgs_visualization/Detection3DDisplay"
-         type="vision_msgs_visualization::Detection3DDisplay"
+  <class name="vision_msgs_visualization/OrkObjectDisplay"
+         type="vision_msgs_visualization::OrkObjectDisplay"
          base_class_type="rviz::Display">
     <description>
-      Displays detected object poses and labels
+      Displays detected object classes, scores, and poses
     </description>
   </class>
 </library>

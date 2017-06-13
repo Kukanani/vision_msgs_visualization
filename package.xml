@@ -3,17 +3,19 @@
   <version>0.3.9</version>
   <description>Visualize computer vision results described by vision_msgs</description>
   <maintainer email="adam.d.allevato@gmail.com">Adam Allevato</maintainer>
-  <license>Apache 2.0</license>
+  <license>BSD</license>
 
   <build_depend>boost</build_depend>
   <build_depend>vision_msgs</build_depend>
   <build_depend>pluginlib</build_depend>
   <build_depend>rviz</build_depend>
+  <build_depend>vision_msgs</build_depend>
 
   <run_depend>boost</run_depend>
   <run_depend>vision_msgs</run_depend>
   <run_depend>pluginlib</run_depend>
   <run_depend>rviz</run_depend>
+  <run_depend>vision_msgs</run_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
