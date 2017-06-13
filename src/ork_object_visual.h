@@ -32,7 +32,7 @@
 
 #include <string>
 
-#include <object_recognition_msgs/RecognizedObject.h>
+#include <vision_msgs/Detection3D.h>
 
 namespace Ogre {
 class Entity;
@@ -48,7 +48,7 @@ class DisplayContext;
 class MovableText;
 }
 
-namespace object_recognition_ros
+namespace vision_msgs_visualization
 {
 // Declare the visual class for this display.
 //
@@ -76,7 +76,7 @@ namespace object_recognition_ros
    * @param do_display_confidence whether the object confidence is displayed
    */
   void
-  setMessage(const object_recognition_msgs::RecognizedObject& msg, const std::string& name, const std::string& mesh_file,
+  setMessage(const vision_msgs::Detection3D& msg, const std::string& name,
              bool do_display_id, bool do_display_name, bool do_display_confidence);
 
     // Set the pose of the coordinate frame the message refers to.
@@ -115,8 +115,15 @@ namespace object_recognition_ros
     // The SceneManager, kept here only so the destructor can ask it to
     // destroy the ``frame_node_``.
     Ogre::SceneManager* scene_manager_;
+
+    /// Check if the given object hypothesis's pose contains any NaN values.
+    bool hypothesisPoseContainsNaNs(
+        vision_msgs::ObjectHypothesisWithPose hypothesis);
+
+    /// Spawn a mesh and attach it to this visual's scene node.
+    void attachMesh();
   };
 
 }// end namespace rviz_plugin_tutorials
 
-#endif // ORK_VISUAL_H
+#endif

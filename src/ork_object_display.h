@@ -32,20 +32,17 @@
 
 #include <rviz/message_filter_display.h>
 
-#include <object_recognition_msgs/RecognizedObjectArray.h>
+#include <vision_msgs/Detection3DArray.h>
 
-#ifndef Q_MOC_RUN
-#include <object_recognition_ros/object_info_cache.h>
-#endif
 
-namespace object_recognition_ros
+namespace vision_msgs_visualization
 {
 
 class OrkObjectVisual;
 
 // OrkObjectDisplay will display a mesh for an object as well as its pose
 // through a TF
-  class OrkObjectDisplay: public rviz::MessageFilterDisplay<object_recognition_msgs::RecognizedObjectArray>
+  class OrkObjectDisplay: public rviz::MessageFilterDisplay<vision_msgs::Detection3DArray>
   {
     Q_OBJECT
   public:
@@ -69,12 +66,10 @@ class OrkObjectVisual;
     // Function to handle an incoming ROS message.
   private:
     void
-    processMessage(const object_recognition_msgs::RecognizedObjectArrayConstPtr& msg);
+    processMessage(const vision_msgs::Detection3DArrayConstPtr& msg);
 
   /** Storage for the list of visuals */
   std::vector<boost::shared_ptr<OrkObjectVisual> > visuals_;
-  /** Cache for al the info */
-  ObjectInfoDiskCache info_cache_;
   /** flag indicating whether the hull should be displayed */
   rviz::BoolProperty* do_display_id_;
   /** flag indicating whether the bounding box should be displayed */

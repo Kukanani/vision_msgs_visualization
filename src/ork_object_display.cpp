@@ -43,13 +43,12 @@
 #include <rviz/properties/int_property.h>
 #include <rviz/visualization_manager.h>
 
-#include <object_recognition_core/db/prototypes/object_info.h>
 
 #include "ork_object_visual.h"
 
 #include "ork_object_display.h"
 
-namespace object_recognition_ros
+namespace vision_msgs_visualization
 {
 
 OrkObjectDisplay::OrkObjectDisplay() {
@@ -73,61 +72,37 @@ void OrkObjectDisplay::onInitialize() {
 }
 
 // Clear the visuals by deleting their objects.
-  void
-  OrkObjectDisplay::reset()
-  {
-    MFDClass::reset();
-    visuals_.clear();
-  }
+void
+OrkObjectDisplay::reset()
+{
+  MFDClass::reset();
+  visuals_.clear();
+}
 
 // This is our callback to handle an incoming message.
-  void
-  OrkObjectDisplay::processMessage(const object_recognition_msgs::RecognizedObjectArrayConstPtr& msg)
-  {
-    // Here we call the rviz::FrameManager to get the transform from the
-    // fixed frame to the frame in the header of this message. If
-    // it fails, we can't do anything else so we return.
-
+void
+OrkObjectDisplay::processMessage(const vision_msgs::Detection3DArrayConstPtr& result)
+{
   visuals_.clear();
-  for (size_t i_msg = 0; i_msg < msg->objects.size(); ++i_msg) {
-    const object_recognition_msgs::RecognizedObject& object = msg->objects[i_msg];
+  for(auto it = result->detections.begin(); it != result->detections.end(); ++it)
+  {
+    vision_msgs::Detection3D object = *it;
+
     // Create a new visual for that message
-    boost::shared_ptr<OrkObjectVisual> visual = boost::shared_ptr<
-        OrkObjectVisual>(
-        new OrkObjectVisual(context_->getSceneManager(), scene_node_,
+    auto visual = boost::shared_ptr<vision_msgs_visualization::OrkObjectVisual>(
+        new vision_msgs_visualization::OrkObjectVisual(context_->getSceneManager(), scene_node_,
                             context_));
     visuals_.push_back(visual);
 
-    // Check if we already have loaded the mesh
-    object_recognition_core::prototypes::ObjectInfo object_info;
-    try {
-      info_cache_.getInfo(object.type, object_info);
-    } catch(...) {
-      ROS_WARN_STREAM("Object " << object.type.key << " not found in database.");
-      return;
-    }
-
-    // Make the mesh be a resource
-    std::string mesh_resource;
-    if (object_info.has_field("mesh_uri"))
-      mesh_resource = object_info.get_field<std::string>("mesh_uri");
-    if (!mesh_resource.empty()) {
-      if (rviz::loadMeshFromResource(mesh_resource).isNull()) {
-        std::stringstream ss;
-        ss << "Could not load [" << mesh_resource << "]";
-        ROS_DEBUG("%s", ss.str().c_str());
-        return;
-      }
-    } else
-      mesh_resource = "";
-
-    // Get the name of the object
-    std::string name;
-    if (object_info.has_field("name"))
-      name = object_info.get_field<std::string>("name");
+    // std::string mesh_resource = "package://vision_msgs_visualization/mesh/mug.dae";
+    // if (rviz::loadMeshFromResource(mesh_resource).isNull()) {
+    //   ROS_DEBUG_STREAM("Could not load " << mesh_resource);
+    //   return;
+    // }
+    std::string name = "obj";
 
     // Define the visual
-    visual->setMessage(object, name, mesh_resource, do_display_id_->getBool(), do_display_name_->getBool(), do_display_confidence_->getBool());
+    visual->setMessage(object, name, do_display_id_->getBool(), do_display_name_->getBool(), do_display_confidence_->getBool());
 
     Ogre::Quaternion orientation;
     Ogre::Vector3 position;
@@ -137,14 +112,14 @@ void OrkObjectDisplay::onInitialize() {
           "Error transforming from frame '%s' to frame '%s'", object.header.frame_id.c_str(), qPrintable( fixed_frame_ ));
       return;
     }
-
     visual->setFramePosition(position);
     visual->setFrameOrientation(orientation);
   }
 }
-}  // end namespace object_recognition_ros
+
+}
 
 // Tell pluginlib about this class.  It is important to do this in
 // global scope, outside our package's namespace.
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(object_recognition_ros::OrkObjectDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(vision_msgs_visualization::OrkObjectDisplay, rviz::Display)
