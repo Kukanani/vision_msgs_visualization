@@ -101,13 +101,13 @@ namespace vision_msgs_visualization
     }
     else
     {
-      Ogre::Vector3 position(best_result.pose.position.x,
-                             best_result.pose.position.y,
-                             best_result.pose.position.z);
-      Ogre::Quaternion orientation(best_result.pose.orientation.w,
-                                   best_result.pose.orientation.x,
-                                   best_result.pose.orientation.y,
-                                   best_result.pose.orientation.z);
+      Ogre::Vector3 position(best_result.pose.pose.position.x,
+                             best_result.pose.pose.position.y,
+                             best_result.pose.pose.position.z);
+      Ogre::Quaternion orientation(best_result.pose.pose.orientation.w,
+                                   best_result.pose.pose.orientation.x,
+                                   best_result.pose.pose.orientation.y,
+                                   best_result.pose.pose.orientation.z);
       object_node_->setOrientation(orientation);
       object_node_->setPosition(position);
 
@@ -157,13 +157,13 @@ namespace vision_msgs_visualization
   bool OrkObjectVisual::hypothesisPoseContainsNaNs(
     vision_msgs::ObjectHypothesisWithPose hypothesis)
   {
-    return (std::isnan(hypothesis.pose.position.x) ||
-            std::isnan(hypothesis.pose.position.y) ||
-            std::isnan(hypothesis.pose.position.z) ||
-            std::isnan(hypothesis.pose.orientation.x) ||
-            std::isnan(hypothesis.pose.orientation.y) ||
-            std::isnan(hypothesis.pose.orientation.z) ||
-            std::isnan(hypothesis.pose.orientation.w));
+    return (std::isnan(hypothesis.pose.pose.position.x) ||
+            std::isnan(hypothesis.pose.pose.position.y) ||
+            std::isnan(hypothesis.pose.pose.position.z) ||
+            std::isnan(hypothesis.pose.pose.orientation.x) ||
+            std::isnan(hypothesis.pose.pose.orientation.y) ||
+            std::isnan(hypothesis.pose.pose.orientation.z) ||
+            std::isnan(hypothesis.pose.pose.orientation.w));
   }
 
   void OrkObjectVisual::attachMesh()
