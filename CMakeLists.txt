@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.2)
 project(vision_msgs_visualization)
 
 add_definitions(-std=c++11)
 
-find_package(catkin REQUIRED vision_msgs pluginlib rviz)
+find_package(catkin REQUIRED COMPONENTS pluginlib rviz vision_msgs)
 find_package(Boost REQUIRED system filesystem serialization)
-catkin_package()
+catkin_package(
+  # DEPENDS
+  CATKIN_DEPENDS rviz vision_msgs
+  LIBRARIES ${PROJECT_NAME}
+)
 
 if(${catkin_VERSION} VERSION_GREATER "0.7.0")
   find_package(Qt5Core)
@@ -42,8 +46,12 @@ endif()
 
 
 install(TARGETS ${PROJECT_NAME}
-  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(DIRECTORY mesh
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY src/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+)
